@@ -65,7 +65,7 @@ su -c 'docker volume create --name=sentry-postgres' - sentry
 su -c 'cd sentry && cp -n .env.example .env' - sentry
 su -c 'cd sentry && docker-compose build' - sentry
 su -c 'cd sentry && SENTRY_SECRET_KEY=`docker-compose run --rm web config generate-secret-key` && echo "SENTRY_SECRET_KEY=${SENTRY_SECRET_KEY}" > .env' - sentry
-su -c 'cd sentry && docker-compose run --rm web upgrade' - sentry
+su -c 'cd sentry && docker-compose run --rm web upgrade' - sentry # Prompts to create new account
 
 echo 'Creating all necessary Docker containers...'
 su -c 'cd sentry && docker-compose up -d' - sentry
