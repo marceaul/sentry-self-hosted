@@ -10,10 +10,10 @@ set -e
 trap 'echo "Error on line $LINENO"' ERR
 
 # Change these values!
-DOMAIN=sentry.myapp.com
-GMAIL_USER=john@gmail.com
-GMAIL_PASSWORD=mypassword
-ADMIN_EMAIL=john@gmail.com
+# DOMAIN=sentry.myapp.com
+# GMAIL_USER=john@gmail.com
+# GMAIL_PASSWORD=mypassword
+# ADMIN_EMAIL=john@gmail.com
 
 if [ -z "$LC_ALL" ]; then
     echo 'Setting locale to avoid Perl warnings "Setting locale failed."'
@@ -47,11 +47,11 @@ echo 'Cloning sentry-onpremise repository...'
 su -c 'git clone https://github.com/getsentry/onpremise.git sentry' - sentry
 su -c 'cd sentry && git checkout cd13427aa9a231b2b27c9fd14017d183cca52c1e' - sentry
 
-echo 'Updating Sentry config to use SSL...'
-sed -i 's/environment:/environment:\n    SENTRY_USE_SSL: 1/g' /home/sentry/sentry/docker-compose.yml
+# echo 'Updating Sentry config to use SSL...'
+# sed -i 's/environment:/environment:\n    SENTRY_USE_SSL: 1/g' /home/sentry/sentry/docker-compose.yml
 
-echo 'Updating Sentry config to use Gmail...'
-sed -i "s=image: tianon/exim4=image: tianon/exim4\n    environment:\n      GMAIL_USER: ${GMAIL_USER}\n      GMAIL_PASSWORD: ${GMAIL_PASSWORD}=g" /home/sentry/sentry/docker-compose.yml
+# echo 'Updating Sentry config to use Gmail...'
+# sed -i "s=image: tianon/exim4=image: tianon/exim4\n    environment:\n      GMAIL_USER: ${GMAIL_USER}\n      GMAIL_PASSWORD: ${GMAIL_PASSWORD}=g" /home/sentry/sentry/docker-compose.yml
 
 echo 'Building Sentry...'
 su -c 'docker volume create --name=sentry-data' - sentry
@@ -64,25 +64,25 @@ su -c 'cd sentry && docker-compose run --rm web upgrade' - sentry
 echo 'Creating all necessary Docker containers...'
 su -c 'cd sentry && docker-compose up -d' - sentry
 
-echo 'Installing Lets Encrypt...'
-git clone https://github.com/letsencrypt/letsencrypt
+# echo 'Installing Lets Encrypt...'
+# git clone https://github.com/letsencrypt/letsencrypt
 
-echo 'Generating SSL certificates...'
-letsencrypt/letsencrypt-auto --standalone --non-interactive --force-renew --email ${ADMIN_EMAIL} --agree-tos auth -d ${DOMAIN}
+# echo 'Generating SSL certificates...'
+# letsencrypt/letsencrypt-auto --standalone --non-interactive --force-renew --email ${ADMIN_EMAIL} --agree-tos auth -d ${DOMAIN}
 
-echo 'Uninstalling Lets Encrypt...'
-rm -rf letsencrypt
+# echo 'Uninstalling Lets Encrypt...'
+# rm -rf letsencrypt
 
 echo 'Creating Sentry log file directory...'
 su -c 'mkdir -p /home/sentry/logs' - sentry
 
-echo 'Setting up Nginx...'
-apt-get install nginx -y
-cp nginx-site /etc/nginx/sites-available/sentry
-sed -i "s/DOMAIN/${DOMAIN}/g" /etc/nginx/sites-available/sentry
-ln -s /etc/nginx/sites-available/sentry /etc/nginx/sites-enabled/sentry
-rm /etc/nginx/sites-enabled/default
-service nginx reload
+# echo 'Setting up Nginx...'
+# apt-get install nginx -y
+# cp nginx-site /etc/nginx/sites-available/sentry
+# sed -i "s/DOMAIN/${DOMAIN}/g" /etc/nginx/sites-available/sentry
+# ln -s /etc/nginx/sites-available/sentry /etc/nginx/sites-enabled/sentry
+# rm /etc/nginx/sites-enabled/default
+# service nginx reload
 
 echo 'Installing Supervisor...'
 apt-get install supervisor -y
