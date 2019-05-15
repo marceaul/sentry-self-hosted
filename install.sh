@@ -26,6 +26,12 @@ fi
 apt-get update
 apt-get upgrade -y
 
+echo 'Creating swap'
+touch swap.img
+dd if=/dev/zero of=swap.img bs=4096k count=1000
+mkswap swap.img
+swapon swap.img
+
 echo 'Installing docker...'
 apt-get install apt-transport-https dirmngr -y
 echo 'deb https://apt.dockerproject.org/repo debian-stretch main' >> /etc/apt/sources.list
@@ -93,6 +99,11 @@ cp supervisor*.conf /etc/supervisor/conf.d/
 echo 'Updating Supervisor...'
 supervisorctl reread
 supervisorctl update
+
+echo 'Removing swap'
+cd /root
+swapoff swap.img
+rm swap.img
 
 echo "Rebooting. In a few minutes, you should be able to open https://${DOMAIN}"
 reboot
