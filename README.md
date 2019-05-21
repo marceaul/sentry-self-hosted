@@ -49,7 +49,7 @@ Connect to your server via SSH. Clone this repository:
 
     apt-get update
     apt-get install git -y
-    git clone https://github.com/mherrmann/sentry-self-hosted.git
+    git clone https://github.com/marceaul/sentry-self-hosted.git
 
 Use an editor such as `vi` to change the settings at the top of
 `install.sh`. Then, make the file executable and run it:
